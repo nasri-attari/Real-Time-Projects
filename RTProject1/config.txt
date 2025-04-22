@@ -1,0 +1,51 @@
+# GENERAL SETTINGS #
+
+max_time=90                     # Total simulation duration in seconds
+effort_threshold=160             # Effort difference needed to win a round
+consecutive_win_limit=3          # Number of consecutive wins to end the game
+max_score=6                     # If either team reaches this score the game ends
+
+# ENERGY SETTINGS #
+
+min_initial_energy=240            # Minimum initial energy per player
+max_initial_energy=260            # Maximum initial energy per player
+min_energy_decrease=4            # Minimum energy decrease
+max_energy_decrease=6            # Maximum energy decrease
+
+# FALL (ACCIDENT) SETTINGS #
+
+fall_chance_percent=6
+min_fall_duration=2              # Minimum seconds a player stays out when falling
+max_fall_duration=3             # Maximum seconds a player stays out when falling
+
+# EFFORT POSITION MULTIPLIERS #
+
+position_multiplier_0=1          # Player nearest the middle
+position_multiplier_1=2
+position_multiplier_2=3
+position_multiplier_3=4          # Player furthest from the center
+
+# ROUND CHECK SETTINGS #
+
+round_interval=1
+
+# GUI #
+
+gui_enabled=1
+
+# ROUND ADVANCED SETTINGS#
+
+max_round_duration=12
+hold_threshold=4
+threshold_decay_step=15
+threshold_decay_interval=4
+
+# REFUEL SETTINGS#
+
+refuel_win_min=2
+refuel_win_max=5
+refuel_loss_min=10
+refuel_loss_max=14
+refuel_tie_min=5
+refuel_tie_max=10
+max_energy=300
