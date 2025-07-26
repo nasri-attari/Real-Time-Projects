@@ -1,0 +1,3 @@
+C:/Users/Dell/Desktop/RealTProject3 (2)/cmake-build-debug/CMakeFiles/RealTProject3__2_.dir
+C:/Users/Dell/Desktop/RealTProject3 (2)/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Dell/Desktop/RealTProject3 (2)/cmake-build-debug/CMakeFiles/rebuild_cache.dir

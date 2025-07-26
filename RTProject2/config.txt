@@ -1,0 +1,37 @@
+# Simulation Settings
+simulation_duration_minutes = 15
+profit_threshold = 2500
+complaint_threshold = 10
+frustrated_threshold = 7
+missing_item_threshold = 10
+
+# Team Counts
+num_chefs = 10
+num_bakers = 10
+num_sellers = 3
+num_customers = 50
+num_supply_chain_workers = 2
+
+# Ingredient Stock Limits
+wheat = 200
+yeast = 200
+butter = 200
+milk = 200
+sugar = 200
+salt = 200
+sweet_items = 200
+cheese = 200
+salami = 200
+
+supply_min_add = 5
+supply_max_add = 10
+
+# Item Prices
+bread_price = 3
+cake_price = 7
+sandwich_price = 5
+sweet_price = 5
+sweet_patisserie_price = 6
+savory_patisserie_price = 6
+
+gui_enabled=1

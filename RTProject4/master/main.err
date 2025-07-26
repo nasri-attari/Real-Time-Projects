@@ -1,0 +1,12 @@
+Message[302] C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[202] C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 49 : Argument out of range.  Least significant bits used.
+Message[302] C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 52 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Error[113]   C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 55 : Symbol not previously defined (LCD_INIT)
+Error[113]   C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 63 : Symbol not previously defined (GET_KEY)
+Error[113]   C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 96 : Symbol not previously defined (GET_KEY)
+Error[113]   C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 128 : Symbol not previously defined (QTY_VALUE)
+Error[113]   C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 133 : Symbol not previously defined (QTY_VALUE)
+Warning[202] C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 143 : Argument out of range.  Least significant bits used.
+Error[105]   C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 186 : Cannot open file (Include File "'LCDIS.INC'" not found)
+Error[105]   C:\USERS\DELL\DESKTOP\PROJECT4\MASTER\MAIN.ASM 187 : Cannot open file (Include File "'KEYPAD.INC'" not found)

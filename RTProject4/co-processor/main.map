@@ -1,0 +1,124 @@
+MPLINK 4.41, Linker
+Linker Map File - Created Sat Jul 05 15:42:36 2025
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x00045c
+      .config_2007_MAIN.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x00022d      
+                            0x002007    0x002007      
+            559 out of 8454 program addresses used, program memory utilization is 6%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+          CHTA_clear_loop   0x0001c2    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+      CLEAR_ASCII_BUFFERS   0x00003f    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     CLEAR_ASCII_BUF_LOOP   0x000043    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     CLEAR_ASCII_RES_LOOP   0x00004b    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+       CLEAR_RCV_BUF_LOOP   0x000055    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     CLEAR_RECEIVE_BUFFER   0x000050    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+    COMPLETE_SYSTEM_RESET   0x00001a    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              DELAY_100US   0x0001e4    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              DELAY_200MS   0x0001da    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              DELAY_INNER   0x0001de    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               DELAY_LOOP   0x0001dc    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+DIVIDE_AND_PREPARE_RESPONSE   0x0000af    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+      DIV_BY_SUBTRACT_ALT   0x000139    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+         DIV_SUB_LOOP_ALT   0x000141    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          DIV_SUB_RESTORE   0x000165    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                  LOOP100   0x0001e6    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                     MAIN   0x000001    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+             RECEIVE_BYTE   0x000072    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+       RECEIVE_DATA_BLOCK   0x00005a    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+             RECEIVE_LOOP   0x000069    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                  SD_LOOP   0x00008d    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                SEND_BYTE   0x00009e    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          SEND_DATA_BLOCK   0x000080    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          WAIT_INT_HIGH_C   0x000072    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          WAIT_INT_HIGH_S   0x00009e    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+            WAIT_INT_IDLE   0x000062    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+           WAIT_INT_LOW_C   0x00007c    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+           WAIT_INT_LOW_S   0x0000ab    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+            WaitAndDivide   0x000015    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               ccopy_loop   0x000221    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                conv_loop   0x00019a    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     convert_ascii_to_hex   0x00018b    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     convert_hex_to_ascii   0x0001ba    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                copy_loop   0x00017c    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                   cpy_lp   0x00017c    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               digit_loop   0x0001cc    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+         div16_check_loop   0x0001ec    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               div16_done   0x0001fa    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+   div16_no_borrow_needed   0x0001f8    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+        div16_perform_sub   0x0001f3    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              div16u_by10   0x0001eb    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               div48_loop   0x000201    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              div48u_by10   0x0001fc    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                init_loop   0x000216    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              mul48u_by10   0x0000fe    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     prepare_ascii_result   0x000210    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     MAIN   0x000001    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+            WaitAndDivide   0x000015    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+    COMPLETE_SYSTEM_RESET   0x00001a    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+      CLEAR_ASCII_BUFFERS   0x00003f    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     CLEAR_ASCII_BUF_LOOP   0x000043    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     CLEAR_ASCII_RES_LOOP   0x00004b    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     CLEAR_RECEIVE_BUFFER   0x000050    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+       CLEAR_RCV_BUF_LOOP   0x000055    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+       RECEIVE_DATA_BLOCK   0x00005a    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+            WAIT_INT_IDLE   0x000062    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+             RECEIVE_LOOP   0x000069    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          WAIT_INT_HIGH_C   0x000072    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+             RECEIVE_BYTE   0x000072    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+           WAIT_INT_LOW_C   0x00007c    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          SEND_DATA_BLOCK   0x000080    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                  SD_LOOP   0x00008d    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                SEND_BYTE   0x00009e    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          WAIT_INT_HIGH_S   0x00009e    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+           WAIT_INT_LOW_S   0x0000ab    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+DIVIDE_AND_PREPARE_RESPONSE   0x0000af    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              mul48u_by10   0x0000fe    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+      DIV_BY_SUBTRACT_ALT   0x000139    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+         DIV_SUB_LOOP_ALT   0x000141    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          DIV_SUB_RESTORE   0x000165    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                copy_loop   0x00017c    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                   cpy_lp   0x00017c    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     convert_ascii_to_hex   0x00018b    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                conv_loop   0x00019a    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     convert_hex_to_ascii   0x0001ba    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+          CHTA_clear_loop   0x0001c2    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               digit_loop   0x0001cc    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              DELAY_200MS   0x0001da    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               DELAY_LOOP   0x0001dc    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              DELAY_INNER   0x0001de    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              DELAY_100US   0x0001e4    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                  LOOP100   0x0001e6    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              div16u_by10   0x0001eb    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+         div16_check_loop   0x0001ec    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+        div16_perform_sub   0x0001f3    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+   div16_no_borrow_needed   0x0001f8    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               div16_done   0x0001fa    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+              div48u_by10   0x0001fc    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               div48_loop   0x000201    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+     prepare_ascii_result   0x000210    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+                init_loop   0x000216    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+               ccopy_loop   0x000221    program     static C:\Users\Dell\RealTimeProject\Project4\co-processor\main.asm
+
+

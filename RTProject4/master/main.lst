@@ -1,0 +1,575 @@
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;  step | action                            | edge case         | fix
+                      00002 ;  ---- | --------------------------------- | ----------------- | -------------------------
+                      00003 ;   1   | wait roll loaded (start button)   | no roll           | show “Load roll”
+                      00004 ;   2   | ask 3 digit length (< 220cm)      | >220 or 000       | reject & re-ask
+                      00005 ;   3   | ask 2digit qty  (?99)            | >99 or 00         | reject & re-ask
+                      00006 ;   4   | menu Start(1)/Stop(0)/Back(3)     | wrong key         | ignore key
+                      00007 ;   5   | stretch motor ON (RC0)            | Over current      | stop motor + message
+                      00008 ;   6   | encoder counts cm (RC4)           | missed pulse      | Ttime-out reset
+                      00009 ;   7   | when count=length stop RC0        | encoder jam       | abort + warn
+                      00010 ;   8   | drive knife motor RC1 to limit    | limit fail        | abort + warn
+                      00011 ;   9   | inc sheet counter, update LCD     | —                 | 
+                      00012 ;  10   | repeat until qty done or roll end | roll finished     | auto stop
+                      00013 ;   11   | user may press Stop(0) anytime    | bounce            | debounce inputs
+                      00014 ;  12   | any fatal error  stop everything | —                 | operator reset
+                      00015 
+                      00016         list        p=16F877A
+                      00017         #include    <P16F877A.INC>
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+                      00018 
+2007   3FF1           00019         __config    _CP_OFF & _WDT_OFF & _PWRTE_ON & _XT_OSC
+                      00020 
+  00000000            00021 STRETCH_MOTOR  equ 0     ; RC0
+  00000001            00022 KNIFE_MOTOR    equ 1     ; RC1
+  00000002            00023 BTN_START      equ 2     ; RC2 (push button)
+  00000003            00024 BTN_STOP       equ 3     ; RC3 (push button)
+  00000004            00025 ENCODER_IN     equ 4     ; RC4 (encoder CLK)
+                      00026 
+                      00027 ;variables (bank0)
+                      00028         cblock  0x20
+  00000020            00029 LENGTH_HUND            
+  00000021            00030 LENGTH_TENS           
+  00000022            00031 LENGTH_ONES           
+  00000023            00032 LEN_VALUE              
+  00000024            00033 QTY_TENS              
+  00000025            00034 QTY_ONES              
+  00000026            00035 ENC_CNT                
+  00000027            00036 SHEETS_DONE            
+  00000028            00037 TEMP                 
+  00000029            00038 DIGITS_LEFT            
+                      00039         endc
+                      00040 
+0000                  00041         org     0x0000
+0000   2801           00042         goto    MAIN
+                      00043 
+0001                  00044 MAIN
+0001   1683 1303      00045         banksel TRISB
+0003   300F           00046         movlw   0x0F        ; RB0-RB3 outputs (rows), RB4-RB7 inputs (cols)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0004   0086           00047         movwf   TRISB
+0005   1683 1303      00048         banksel TRISC
+Warning[202]: Argument out of range.  Least significant bits used.
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0007   3000           00049         movlw   0b11110000  ; RC0-RC3 outputs, RC4-RC7 inputs
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0008   0087           00050         movwf   TRISC
+0009   1683 1303      00051         banksel TRISD
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000B   0188           00052         clrf    TRISD       ; PORTD = LCD data/ctrl (outputs)
+000C   1283 1303      00053         banksel PORTB
+                      00054 
+Error[113]  : Symbol not previously defined (LCD_INIT)
+000E   2000           00055         call    LCD_INIT    ; from LCDIS.INC (library for lcd used in project)
+                      00056 
+                      00057 ;sheet Length Entry (3 digits)
+000F                  00058 GET_LEN
+000F   3003           00059         movlw   3
+0010   00A9           00060         movwf   DIGITS_LEFT
+0011   01A3           00061         clrf    LEN_VALUE
+0012                  00062 LEN_LOOP
+Error[113]  : Symbol not previously defined (GET_KEY)
+0012   2000           00063         call    GET_KEY     ; returns ASCII '0'..'9'
+0013   00A8           00064         movwf   TEMP
+0014   3C30           00065         sublw   '0'
+0015   1C03           00066         btfss   STATUS,C    ; not a digit
+0016   2812           00067         goto    LEN_LOOP
+0017   0828           00068         movf    TEMP,W
+0018   3C30           00069         sublw   '0'         
+                      00070         ; store per position
+0019   0829           00071         movf    DIGITS_LEFT,W
+001A   3EFD           00072         addlw   -3
+001B   1D03           00073         skpz
+001C   00A0           00074         movwf   LENGTH_HUND
+001D   0829           00075         movf    DIGITS_LEFT,W
+001E   3EFE           00076         addlw   -2
+001F   1D03           00077         skpz
+0020   00A1           00078         movwf   LENGTH_TENS
+0021   0829           00079         movf    DIGITS_LEFT,W
+0022   3EFF           00080         addlw   -1
+0023   1D03           00081         skpz
+0024   00A2           00082         movwf   LENGTH_ONES
+0025   0BA9           00083         decfsz  DIGITS_LEFT,f
+0026   2812           00084         goto    LEN_LOOP
+                      00085         
+0027   0820           00086         movf    LENGTH_HUND,W
+0028   3C02           00087         sublw   2
+0029   1C03           00088         btfss   STATUS,C
+002A   280F           00089         goto    GET_LEN      ; if >2 re-enter
+                      00090 
+                      00091 ;quantity Entry (2 digits)
+002B                  00092 GET_QTY
+002B   3002           00093         movlw   2
+002C   00A9           00094         movwf   DIGITS_LEFT
+002D                  00095 QTY_LOOP
+Error[113]  : Symbol not previously defined (GET_KEY)
+002D   2000           00096         call    GET_KEY
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+002E   00A8           00097         movwf   TEMP
+002F   3C30           00098         sublw   '0'
+0030   1C03           00099         btfss   STATUS,C
+0031   282D           00100         goto    QTY_LOOP
+0032   0828           00101         movf    TEMP,W
+0033   3C30           00102         sublw   '0'
+0034   0829           00103         movf    DIGITS_LEFT,W
+0035   3EFE           00104         addlw   -2
+0036   1D03           00105         skpz
+0037   00A4           00106         movwf   QTY_TENS
+0038   0829           00107         movf    DIGITS_LEFT,W
+0039   3EFF           00108         addlw   -1
+003A   1D03           00109         skpz
+003B   00A5           00110         movwf   QTY_ONES
+003C   0BA9           00111         decfsz  DIGITS_LEFT,f
+003D   282D           00112         goto    QTY_LOOP
+                      00113         ; bound check tens>9 or both zero
+003E   0824           00114         movf    QTY_TENS,W
+003F   3C09           00115         sublw   9
+0040   1C03           00116         btfss   STATUS,C
+0041   282B           00117         goto    GET_QTY
+0042   0824           00118         movf    QTY_TENS,W
+0043   0425           00119         iorwf   QTY_ONES,W
+0044   1903 282B      00120         bz      GET_QTY
+                      00121         ; compute binary tens*10+ones
+0046   0824           00122         movf    QTY_TENS,W
+0047   0724           00123         addwf   QTY_TENS,W   ; *2
+0048   0724           00124         addwf   QTY_TENS,W   ; *4
+0049   0724           00125         addwf   QTY_TENS,W   ; *8
+004A   3E02           00126         addlw   2            ; *10 
+004B   0725           00127         addwf   QTY_ONES,W
+Error[113]  : Symbol not previously defined (QTY_VALUE)
+004C   0080           00128         movwf   QTY_VALUE
+                      00129 
+                      00130 ;cutting Loop
+004D                  00131 CUT_LOOP
+004D   0827           00132         movf    SHEETS_DONE,W
+Error[113]  : Symbol not previously defined (QTY_VALUE)
+004E   0200           00133         subwf   QTY_VALUE,W
+004F   1903           00134         btfsc   STATUS,Z     
+0050   286E           00135         goto    FINISH
+                      00136 
+                      00137 ;stretch motor ON and encoder count
+0051   01A6           00138         clrf    ENC_CNT
+0052   1407           00139         bsf     PORTC, STRETCH_MOTOR   ; RC0 = 1
+0053                  00140 STRETCH
+0053   205C           00141         call    POLL_ENCODER          ; update ENC_CNT
+0054   0826           00142         movf    ENC_CNT,W
+Warning[202]: Argument out of range.  Least significant bits used.
+0055   3C21           00143         sublw   221                   ; if reached 220
+0056   1C03           00144         btfss   STATUS,C
+0057   2853           00145         goto    STRETCH
+0058   1007           00146         bcf     PORTC, STRETCH_MOTOR   ; stop motor
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00147 
+                      00148 ;Blade knife motor action
+0059   2062           00149         call    CUT_SHEET
+                      00150 
+005A   0AA7           00151         incf    SHEETS_DONE,f
+005B   284D           00152         goto    CUT_LOOP
+                      00153 
+                      00154 
+                      00155 ; polling of encoder on RC4 
+005C                  00156 POLL_ENCODER
+005C   1E07           00157         btfss   PORTC, ENCODER_IN   
+005D   0008           00158         return
+005E                  00159 PE_WAIT_LOW
+005E   1A07           00160         btfsc   PORTC, ENCODER_IN
+005F   285E           00161         goto    PE_WAIT_LOW
+0060   0AA6           00162         incf    ENC_CNT,f
+0061   0008           00163         return
+                      00164 
+                      00165 ; drive blade knife
+0062                  00166 CUT_SHEET
+0062   1A86           00167         btfsc   PORTB,5       ; if at left -> move right
+0063   2869           00168         goto    KNIFE_RIGHT
+0064                  00169 KNIFE_LEFT
+0064   1487           00170         bsf     PORTC, KNIFE_MOTOR ; RC1=1 move left
+0065   1A86           00171 KS_L1   btfsc   PORTB,5       ; wait until SL low
+0066   2865           00172         goto    KS_L1
+0067   1087           00173         bcf     PORTC, KNIFE_MOTOR ; stop
+0068   0008           00174         return
+0069                  00175 KNIFE_RIGHT
+0069   1487           00176         bsf     PORTC, KNIFE_MOTOR ; RC1=1 move right
+006A   1B06           00177 KS_R1   btfsc   PORTB,6       ; wait until SR low
+006B   286A           00178         goto    KS_R1
+006C   1087           00179         bcf     PORTC, KNIFE_MOTOR
+006D   0008           00180         return
+                      00181 
+006E                  00182 FINISH
+006E   286E           00183         goto    FINISH        ; halted here
+                      00184 
+                      00185 ; external files
+Error[105]  : Cannot open file (Include File "'LCDIS.INC'" not found)
+                      00186         include 'LCDIS.INC'   ; 16×2 LCD driver 
+Error[105]  : Cannot open file (Include File "'KEYPAD.INC'" not found)
+                      00187         include 'KEYPAD.INC'  ; 4×3 keypad scan 
+                      00188 
+                      00189         end
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+BTN_START                         00000002
+BTN_STOP                          00000003
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CUT_LOOP                          0000004D
+CUT_SHEET                         00000062
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DIGITS_LEFT                       00000029
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+ENCODER_IN                        00000004
+ENC_CNT                           00000026
+F                                 00000001
+FERR                              00000002
+FINISH                            0000006E
+FSR                               00000004
+GCEN                              00000007
+GET_LEN                           0000000F
+GET_QTY                           0000002B
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+KNIFE_LEFT                        00000064
+KNIFE_MOTOR                       00000001
+KNIFE_RIGHT                       00000069
+KS_L1                             00000065
+KS_R1                             0000006A
+LENGTH_HUND                       00000020
+LENGTH_ONES                       00000022
+LENGTH_TENS                       00000021
+LEN_LOOP                          00000012
+LEN_VALUE                         00000023
+MAIN                              00000001
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PE_WAIT_LOW                       0000005E
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+POLL_ENCODER                      0000005C
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+QTY_LOOP                          0000002D
+QTY_ONES                          00000025
+QTY_TENS                          00000024
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SHEETS_DONE                       00000027
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+STRETCH                           00000053
+STRETCH_MOTOR                     00000000
+SYNC                              00000004
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TEMP                              00000028
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+MPASM  5.43                          MAIN.ASM   7-8-2025  10:40:14         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXX- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   111
+Program Memory Words Free:  8081
+
+
+Errors   :     7
+Warnings :     2 reported,     0 suppressed
+Messages :     3 reported,     0 suppressed
+
+
