@@ -1,4 +1,4 @@
-\# Concurrent Police-and-Gang Simulation
+# Concurrent Police-and-Gang Simulation
 
 
 
@@ -10,43 +10,43 @@ The project demonstrates coordination between multiple Linux processes and ends 
 
 
 
-\## Components
+## Components
 
 
 
-\- \*\*Main process\*\* — initializes shared resources and controls simulation shutdown
+- **Main process** — initializes shared resources and controls simulation shutdown
 
-\- \*\*Gang processes\*\* — simulate independent gangs and their plans
+- **Gang processes** — simulate independent gangs and their plans
 
-\- \*\*Police process\*\* — responds to gang activity
+- **Police process** — responds to gang activity
 
-\- \*\*GUI process\*\* — visualizes the simulation
+- **GUI process** — visualizes the simulation
 
-\- \*\*Configuration module\*\* — loads parameters from `config.txt`
-
-
-
-\## Technical highlights
+- **Configuration module** — loads parameters from `config.txt`
 
 
 
-\- Process creation and execution with `fork()` and `exec()`
-
-\- Shared memory for common simulation state
-
-\- System V semaphores for synchronization
-
-\- System V message queues for process communication
-
-\- Signals for process lifecycle control
-
-\- OpenGL/GLUT GUI
-
-\- Configurable simulation limits
+## Technical highlights
 
 
 
-\## Architecture
+- Process creation and execution with `fork()` and `exec()`
+
+- Shared memory for common simulation state
+
+- System V semaphores for synchronization
+
+- System V message queues for process communication
+
+- Signals for process lifecycle control
+
+- OpenGL/GLUT GUI
+
+- Configurable simulation limits
+
+
+
+## Architecture
 
 
 
