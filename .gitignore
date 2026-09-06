@@ -1,0 +1,20 @@
+# JetBrains IDE settings
+.idea/
+
+# C/C++ build output
+**/bin/
+**/obj/
+**/cmake-build-*/
+
+# RTProject3 compiled executables
+RTProject3/main
+RTProject3/police
+RTProject3/gang
+RTProject3/gui
+
+# PIC assembler intermediate output
+RTProject4/code/*.O
+RTProject4/code/*.cof
+RTProject4/code/*.err
+RTProject4/code/*.lst
+RTProject4/code/*.map
