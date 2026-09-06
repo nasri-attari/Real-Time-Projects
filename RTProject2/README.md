@@ -9,19 +9,19 @@ A real-time, multi-process simulation of a restaurant workflow—from supply cha
 ## System roles
 
 
-- \*\*Manager\*\* — starts and coordinates the simulation
+- **Manager** — starts and coordinates the simulation
 
-- \*\*Supply Chain\*\* — provides ingredients and resources
+- **Supply Chain** — provides ingredients and resources
 
-- \*\*Baker\*\* — prepares baked items
+- **Baker** — prepares baked items
 
-- \*\*Chef\*\* — prepares meals
+- **Chef** — prepares meals
 
-- \*\*Seller\*\* — handles sales
+- **Seller** — handles sales
 
-- \*\*Customer\*\* — generates customer requests
+- **Customer** — generates customer requests
 
-- \*\*GUI\*\* — displays the simulation state
+- **GUI** — displays the simulation state
 
 
 
