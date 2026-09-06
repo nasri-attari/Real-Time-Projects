@@ -26,7 +26,7 @@ A configurable real-time systems simulation of a tug-of-war match between two te
 
 
 
-\## Architecture
+## Architecture
 
 
 
