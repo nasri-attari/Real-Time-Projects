@@ -1,4 +1,4 @@
-\# PIC16F877A LCD Division Interface
+# PIC16F877A LCD Division Interface
 
 
 
@@ -6,45 +6,45 @@ An embedded-systems project built for the PIC16F877A microcontroller. The system
 
 
 
-\## Features
+## Features
 
 
 
-\- PIC16F877A microcontroller firmware
+- PIC16F877A microcontroller firmware
 
-\- Assembly-language implementation
+- Assembly-language implementation
 
-\- LCD-based user interface
+- LCD-based user interface
 
-\- Button input through the PIC I/O pins
+- Button input through the PIC I/O pins
 
-\- Numeric entry flow with a visible LCD cursor
+- Numeric entry flow with a visible LCD cursor
 
-\- Division-oriented calculation interface
+- Division-oriented calculation interface
 
-\- Proteus simulation resources
+- Proteus simulation resources
 
-\- Compiled HEX firmware included
-
-
-
-\## Technologies
+- Compiled HEX firmware included
 
 
 
-\- PIC16F877A
-
-\- PIC Assembly / MPASM
-
-\- 16×2 character LCD
-
-\- Proteus
-
-\- MPLAB-compatible project files
+## Technologies
 
 
 
-\## Repository structure
+- PIC16F877A
+
+- PIC Assembly / MPASM
+
+- 16×2 character LCD
+
+- Proteus
+
+- MPLAB-compatible project files
+
+
+
+## Repository structure
 
 
 
